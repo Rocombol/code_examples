@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>append demo</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+    <script>
+        var arr = [9, 9, 111, 2, 3, 4, 4, 5, 7];
+        var sorted_arr = arr.slice().sort(); 
+        var results = [];
+        for (var i = 0; i < arr.length; i++) {
+            if (sorted_arr[i + 1] == sorted_arr[i]) {
+                results.push(sorted_arr[i]);
+            }
+        }
+
+        console.log(results);
+    </script>
+</body>
+
+</html>
