@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Untitled</title>
+  <meta charset="utf-8">
+  <style type="text/css">
+  </style>
+
+
+</head>
+
+<body>
+<div id="myDynamicTable"></div>
+ <script>
+function addTable() {
+            var myTableDiv = document.getElementById("myDynamicTable");
+            var table = document.createElement('TABLE');
+            var tableBody = document.createElement('TBODY');
+            table.appendChild(tableBody);
+            for (var i = 0; i < 5; i++) {
+                var tr = document.createElement('TR');
+                tableBody.appendChild(tr);
+                for (var j = 0; j < 5; j++) {
+                    var td = document.createElement('TD');
+                    td.appendChild(document.createTextNode(  j == i ? 1  : j <  i ? 2 : 3 ));
+                    tr.appendChild(td);
+                }
+            }
+            myTableDiv.appendChild(table);
+        }
+        addTable()
+
+  </script>
+</body>
+</html>
