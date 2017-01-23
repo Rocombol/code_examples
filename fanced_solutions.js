@@ -12,9 +12,22 @@ function max(array) {
     return Math.max.apply(null, array);
 }
 /*-----------------------------------------------------------------------------------*/
-function max(array) {
+function mix(array) {
     return Math.min.apply(null, array);
 }
+
+/*----------------------------------------------*/
+        function min(a, b) {
+            if (a < b)
+                return a;
+            else
+                return b;
+        }
+
+        console.log(min(0, 10));
+        // → 0
+        console.log(min(0, -10));
+        // → -10
 /*-----------------------------------------------------------------------------------*/
 dublicate_in_array.html
 var arr = [9, 9, 111, 2, 3, 4, 4, 5, 7];
@@ -1724,9 +1737,9 @@ function descendingOrder(n) {
         } < /script>
         /*-----------------------------------------------------------------------------------*/
         < div id = "clock" >
-        < span class = "hour" > hh < /span>:<span class="min">mm</span > : < span class = "sec" > ss < /span> < /div>
+        < span class = "hour" > hh < /span>:<span class="min">mm</span > : < span class = "sec" > ss < /span> < /div >
 
-    < script >
+        < script >
         var timerId;
 
     function update() {
@@ -1824,47 +1837,385 @@ function descendingOrder(n) {
         obj, 'name'
     });
     /*-----------------------------------------------------------------------------------*/
-	<!DOCTYPE html>
-<html>
-<body>
-<h1>JavaScript Functions</h1>
+    < !DOCTYPE html >
+        < html >
+        < body >
+        < h1 > JavaScript Functions < /h1>
 
-<p onclick="removeProperty(obj,'name')">This example calls :</p>
-<script>
-function removeProperty(obj,prop){
+    < p onclick = "removeProperty(obj,'name')" > This example calls: < /p> < script >
 
-if(obj.hasOwnProperty(prop)) {
-    console.log(obj);
-    var b = delete obj.prop;
-    console.log(b);
-    return true;
-  }
-  else {
-      return false;
+    function removeProperty(obj, prop) {
+
+        if (obj.hasOwnProperty(prop)) {
+            console.log(obj);
+            var b = delete obj.prop;
+            console.log(b);
+            return true;
+        } else {
+            return false;
+        }
     }
+
+    var obj = {
+        name: "John"
+    };
+
+    // removeProperty(obj,'name');
+
+    < /script> < /body > < /html>
+    /*-----------------------------------------------------------------------------------*/
+    var user = {
+        firstName: "Вася",
+        sayHi: function() {
+            alert(this.firstName);
+        }
+    };
+
+    setTimeout(user.sayHi, 1000); // undefined (не Вася!)
+
+    Оказывается все очень просто в примере "Потери контекста"!Я долго ломал мозг, почему теряется контекст.Пока хорошенько не изучил метод setTimeout.Если мы вызываем таким способом:
+
+        setTimeout(user.sayHi, 1000)
+    то это тоже самое, что и:
+
+        window.setTimeout(user.sayHi, 1000)
+    а в первый параметр таймера в итоге передается следующая строка:
+
+        function() {
+            alert(this.firstName)
+        }
+    Таким образом, user теряется и контекстом this становится глобальный объект window.Ведь setTimeout - это исключительно глобальный метод!А если мы оборачиваем
+
+    user.sayHi
+    в анонимную функцию, то в первый параметр таймера уже передается такой текст:
+
+        function() {
+            user.sayHi()
+        }
+    т.е.здесь контекст user на лицо!
+
+        /*-----------------------------------------------------------------------------------*/
+        Простой пример карринга без bind для общего понимания:
+
+        var greetCurried = function(greeting) {
+            return function(name) {
+                console.log(greeting + ", " + name);
+            };
+        };
+
+    var greetHello = greetCurried("Hello");
+    greetHello("Вася"); //"Hello, Вася"
+    greetHello("Петя"); //"Hello, Петя"
+    Карринг(currying) или каррирование– термин функционального программирования, который означает создание новой функции путём фиксирования аргументов существующей.
+
+    Как было сказано выше, метод func.bind(context, ...) может создавать обёртку, которая фиксирует не только контекст, но и ряд аргументов функции.
+    function mul(a, b) {
+        return a * b;
+    };
+
+    // double умножает только на два
+    var double = mul.bind(null, 2); // контекст фиксируем null, он не используется
+
+    alert(double(3)); // = mul(2, 3) = 6
+    alert(double(4)); // = mul(2, 4) = 8
+    alert(double(5)); // = mul(2, 5) = 10
+    /*-----------------------------------------------------------------------------------*/
+    function sum(x) {
+        if (arguments.length == 2) {
+            return arguments[0] + arguments[1];
+        } else {
+            return function(y) {
+                return x + y;
+            };
+        }
+    }
+
+    /*-----------------------------------------------------------------------------------*/
+    function sum(x, y) {
+        if (y !== undefined) {
+            return x + y;
+        } else {
+            return function(y) {
+                return x + y;
+            };
+        }
+    }
+    /*-----------------------------------------------------------------------------------*/
+            function countChar(string, ch) {
+            var counted = 0;
+            for (var i = 0; i < string.length; i++)
+                if (string.charAt(i) == ch)
+                    counted += 1;
+            return counted;
+        }
+
+        function countBs(string) {
+            return countChar(string, "B");
+        }
+
+        console.log(countBs("BBC"));
+        // → 2
+        console.log(countChar("kakkerlak", "k"));
+        // → 4
+    /*-----------------------------------------------------------------------------------*/
+            function range(start, end, step) {
+          if (step == null) step = 1;
+          var array = [];
+
+          if (step > 0) {
+            for (var i = start; i <= end; i += step)
+              array.push(i);
+          } else {
+            for (var i = start; i >= end; i += step)
+              array.push(i);
+          }
+          return array;
+        }
+
+        function sum(array) {
+          var total = 0;
+          for (var i = 0; i < array.length; i++)
+            total += array[i];
+          return total;
+        }
+
+        console.log(sum(range(1, 10)));
+        // → 55
+        console.log(range(5, 2, -1));
+        // → [5, 4, 3, 2]
+    /*-----------------------------------------------------------------------------------*/
+    
+       function deepEqual(a, b) {
+            if (a === b) return true;
+
+            if (a == null || typeof a != "object" ||
+                b == null || typeof b != "object")
+                return false;
+
+            var propsInA = 0,
+                propsInB = 0;
+
+            for (var prop in a)
+                propsInA += 1;
+
+            for (var prop in b) {
+                propsInB += 1;
+                if (!(prop in a) || !deepEqual(a[prop], b[prop]))
+                    return false;
+            }
+
+            return propsInA == propsInB;
+        }
+
+
+    /*-----------------------------------------------------------------------------------*/
+	<!doctype html>
+
+<base href="http://eloquentjavascript.net/">
+<script src="code/mountains.js"></script>
+
+<style>
+    /* Defines a cleaner look for tables */
+    
+    table {
+        border-collapse: collapse;
+    }
+    
+    td,
+    th {
+        border: 1px solid black;
+        padding: 3px 8px;
+    }
+    
+    th {
+        text-align: left;
+    }
+</style>
+
+<body>
+    <script>
+        function buildTable(data) {
+            var table = document.createElement("table");
+
+            var fields = Object.keys(data[0]);
+            var headRow = document.createElement("tr");
+            fields.forEach(function(field) {
+                var headCell = document.createElement("th");
+                headCell.textContent = field;
+                headRow.appendChild(headCell);
+            });
+            table.appendChild(headRow);
+
+            data.forEach(function(object) {
+                var row = document.createElement("tr");
+                fields.forEach(function(field) {
+                    var cell = document.createElement("td");
+                    cell.textContent = object[field];
+                    if (typeof object[field] == "number")
+                        cell.style.textAlign = "right";
+                    row.appendChild(cell);
+                });
+                table.appendChild(row);
+            });
+
+            return table;
+        }
+
+        document.body.appendChild(buildTable(MOUNTAINS));
+    </script>
+</body>
+    /*-----------------------------------------------------------------------------------*/
+    <!doctype html>
+
+    <h1>Heading with a <span>span</span> element.</h1>
+    <p>A paragraph with <span>one</span>, <span>two</span>
+    spans.</p>
+
+    <script>
+    function byTagName(node, tagName) {
+        var found = [];
+        tagName = tagName.toUpperCase();
+
+        function explore(node) {
+            for (var i = 0; i < node.childNodes.length; i++) {
+                var child = node.childNodes[i];
+                if (child.nodeType == document.ELEMENT_NODE) {
+                    if (child.nodeName == tagName)
+                        found.push(child);
+                    explore(child);
+                }
+            }
+        }
+
+        explore(node);
+        return found;
+    }
+
+    console.log(byTagName(document.body, "h1").length);
+    // → 1
+    console.log(byTagName(document.body, "span").length);
+    // → 3
+    var para = document.querySelector("p");
+    console.log(byTagName(para, "span").length);
+    // → 2
+    </script>
+    /*-----------------------------------------------------------------------------------*/
+<!doctype html>
+
+<style>
+.trail {
+    /* className for the trail elements */
+    position: absolute;
+    height: 6px;
+    width: 6px;
+    border-radius: 3px;
+    background: teal;
 }
 
-var obj= {
-  name:"John"
-};
+body {
+    height: 300px;
+}
+</style>
 
-// removeProperty(obj,'name');
+<body>
+<script>
+var dots = [];
+for (var i = 0; i < 25; i++) {
+    var node = document.createElement("div");
+    node.className = "trail";
+    document.body.appendChild(node);
+    dots.push(node);
+}
+var currentDot = 0;
 
+addEventListener("mousemove", function(event) {
+    var dot = dots[currentDot];
+    dot.style.left = (event.pageX - 3) + "px";
+    dot.style.top = (event.pageY - 3) + "px";
+    currentDot = (currentDot + 1) % dots.length;
+});
 </script>
 </body>
-</html>
     /*-----------------------------------------------------------------------------------*/
+<!doctype html>
+
+<div id="wrapper">
+    <div data-tabname="one">Tab one</div>
+<div data-tabname="two">Tab two</div>
+<div data-tabname="three">Tab three</div>
+</div>
+<script>
+function asTabs(node) {
+    var tabs = [];
+    for (var i = 0; i < node.childNodes.length; i++) {
+        var child = node.childNodes[i];
+        if (child.nodeType == document.ELEMENT_NODE)
+            tabs.push(child);
+    }
+
+    var tabList = document.createElement("div");
+    tabs.forEach(function(tab, i) {
+        var button = document.createElement("button");
+        button.textContent = tab.getAttribute("data-tabname");
+        button.addEventListener("click", function() { selectTab(i); });
+        tabList.appendChild(button);
+    });
+    node.insertBefore(tabList, node.firstChild);
+
+    function selectTab(n) {
+        tabs.forEach(function(tab, i) {
+            if (i == n)
+                tab.style.display = "";
+            else
+                tab.style.display = "none";
+        });
+        for (var i = 0; i < tabList.childNodes.length; i++) {
+            if (i == n)
+                tabList.childNodes[i].style.background = "violet";
+            else
+                tabList.childNodes[i].style.background = "";
+        }
+    }
+    selectTab(0);
+}
+asTabs(document.querySelector("#wrapper"));
+</script>
+
     /*-----------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------------------------*/
+<!doctype html>
+
+<input type="text" id="field">
+    <div id="suggestions" style="cursor: pointer"></div>
+
+    <script>
+// Builds up an array with global variable names, like
+// 'alert', 'document', and 'scrollTo'
+var terms = [];
+for (var name in window)
+    terms.push(name);
+
+var textfield = document.querySelector("#field");
+var suggestions = document.querySelector("#suggestions");
+
+textfield.addEventListener("input", function() {
+    var matching = terms.filter(function(term) {
+        return term.indexOf(textfield.value) == 0;
+    });
+    suggestions.textContent = "";
+    matching.slice(0, 20).forEach(function(term) {
+        var node = document.createElement("div");
+        node.textContent = term;
+        node.addEventListener("click", function() {
+            textfield.value = term;
+            suggestions.textContent = "";
+        });
+        suggestions.appendChild(node);
+    });
+});
+</script>
+
+
+
     /*-----------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------*/
     /*-----------------------------------------------------------------------------------*/
